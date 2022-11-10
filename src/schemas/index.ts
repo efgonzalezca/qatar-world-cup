@@ -1,0 +1,1 @@
+export { teamSchema } from './team.schema';

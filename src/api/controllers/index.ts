@@ -1,0 +1,1 @@
+export { getTeams } from './teams.controller';
