@@ -1,0 +1,3 @@
+export type requestProperty = 'body' | 'params' | 'query';
+
+export type validateSchema = 'login'
