@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import { UserService, UserMatchesService, MatchService } from '../../services';
 import { matchData } from '../../services/userMatches.service';
+import { ICustomRequest } from '../../types';
 import { getExtraParams, logger, ErrorHandler } from '../../utils';
 
 interface register {
@@ -9,6 +10,13 @@ interface register {
   names: string,
   surnames: string,
   password: string
+}
+
+interface updated {
+  password?: string,
+  champion?: string,
+  runner_up?: string,
+  third_place?: string,
 }
 
 export const modifyMatchFromUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -93,6 +101,31 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       .json({
         message: 'User created',
         id: document
+      })
+  } catch(err) {
+    return next(err);
+  }
+}
+
+export const updateUser = async (req: ICustomRequest, res: Response, next: NextFunction) => {
+  try {
+    const { password, champion, runner_up, third_place } = <updated>req.body
+
+    if(password) {
+      await UserService.updateById(<string>req.payload?.document, password, 'password');
+    } else if(champion) {
+      await UserService.updateById(<string>req.payload?.document, champion, 'champion');
+    } else if(runner_up) {
+      await UserService.updateById(<string>req.payload?.document, runner_up, 'runner_up');
+    } else if(third_place) {
+      await UserService.updateById(<string>req.payload?.document, third_place, 'third_place');
+    } else {
+      throw new ErrorHandler(500, 50002, 'Invalid user updated');
+    }
+    return res
+      .status(200)
+      .json({
+        message: 'User updated'
       })
   } catch(err) {
     return next(err);

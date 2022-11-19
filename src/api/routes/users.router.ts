@@ -1,6 +1,6 @@
 import { json, Router } from 'express';
 
-import { getUsersRanking, modifyMatchFromUser, register } from '../controllers';
+import { getUsersRanking, modifyMatchFromUser, register, updateUser } from '../controllers';
 import { validatorHandler, verifyJWT } from '../middlewares';
 
 export const router: Router = Router();
@@ -25,4 +25,13 @@ router.post(
   json(),
   validatorHandler('register', 'body'),
   register
+)
+
+router.patch(
+  '/:id',
+  json(),
+  verifyJWT,
+  validatorHandler('userUpdateParams', 'params'),
+  validatorHandler('userUpdateBody', 'body'),
+  updateUser
 )
