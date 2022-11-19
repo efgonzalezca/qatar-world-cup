@@ -1,8 +1,10 @@
-import { Schema } from 'mongoose';
+import { Schema, Types } from 'mongoose';
 
 export const userMatchesSchema = new Schema({
   _id: {
-    type: Object,
+    type: Types.ObjectId,
+    required:true,
+    auto: true 
   },
   user_id: {
     type: String,
@@ -14,11 +16,9 @@ export const userMatchesSchema = new Schema({
   },
   local_score: {
     type: Number,
-    required: true,
   },
   visitor_score: {
     type: Number,
-    required: true,
   }
 }, {
   collection: 'users_matches',

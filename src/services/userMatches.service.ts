@@ -4,6 +4,12 @@ import config from '../config';
 import { userMatchesSchema } from '../schemas';
 import { IMatchResult } from '../types/IUser';
 
+export interface matchData {
+  user_id: string,
+  match_id: string,
+  local_score: number | null,
+  visitor_score: number | null
+}
 export class UserMatchesService {
   private static dbName: string = config.dbNameApp;
   private static db: (Connection | undefined) = connections.find((conn) => {
@@ -25,6 +31,32 @@ export class UserMatchesService {
     this.createModel();
     if(this.model) {
       return this.model.findOneAndUpdate({user_id: user_id, match_id: match_id}, update);
+    }
+    return;
+  }
+
+  static create(matchData: matchData) {
+    this.createModel();
+    if(this.model) {
+      return this.model.create(matchData);
+    }
+    return;
+  }
+
+  static async createAll(matches: matchData[]) {
+    
+    for (let match of matches) {
+      if(!(await this.exists(match.user_id ,match.match_id))) {
+        await this.create(match)
+      }
+    }
+  }
+
+  static async exists(user_id: string, match_id: string) {
+    this.createModel()
+    if(this.model) {
+      let user = await this.model.findOne({user_id: user_id, match_id: match_id}).lean();
+      return user ? true : false;
     }
     return;
   }

@@ -3,7 +3,7 @@ import { Schema } from 'mongoose';
 const selected_teams = new Schema({
   champion: String,
   runner_up: String,
-  surnames: String,
+  third_place: String,
 }, {_id: false})
 
 export const userSchema = new Schema({

@@ -1,3 +1,3 @@
 export type requestProperty = 'body' | 'params' | 'query';
 
-export type validateSchema = 'login' | 'modifyMatchFromUserBody' | 'modifyMatchFromUserParams'
+export type validateSchema = 'login' | 'modifyMatchFromUserBody' | 'modifyMatchFromUserParams' | 'register'
