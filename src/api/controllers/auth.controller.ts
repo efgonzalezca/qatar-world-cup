@@ -4,6 +4,7 @@ import { compareSync } from 'bcryptjs';
 import { IPayload } from '../../types';
 import { UserService } from '../../services';
 import { ErrorHandler, generateJWT, getExtraParams, logger } from '../../utils';
+import { UserMatchesService } from '../../services/userMatches.service';
 
 interface login {
   document: string,
@@ -26,6 +27,9 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
     let payload: IPayload = {
       document: user._id,
     }
+    
+    const matches_results = await UserMatchesService.findAllByUser(user._id, {_id: false, user_id: false})?.lean();
+
     const token = await generateJWT(payload);
     logger.info(`Login user ${user._id}`, getExtraParams(req));
     return res
@@ -36,7 +40,11 @@ export const login = async (req: Request, res: Response, next: NextFunction) => 
         names: user.names,
         score: user.score,
         selected_teams: user.selected_teams,
-        matches_results: user.matches_results
+        matches_results: matches_results?.map((matchResult) => ({
+          _id: matchResult.match_id,
+          local_score: matchResult.local_score,
+          visitor_score: matchResult.visitor_score
+        }))
       })
   } catch(err) {
     return next(err);

@@ -1,4 +1,4 @@
-export { IUser } from './IUser';
+export { IUser, IMatchResult } from './IUser';
 export { ITeam } from './ITeam';
 export { IMatch } from './IMatch';
 export { IPayload } from './THttpUtils';

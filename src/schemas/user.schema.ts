@@ -6,12 +6,6 @@ const selected_teams = new Schema({
   surnames: String,
 }, {_id: false})
 
-const match_result = new Schema({
-  _id: String,
-  local_score: Number,
-  visitor_score: Number
-})
-
 export const userSchema = new Schema({
   _id: {
     type: String,
@@ -35,9 +29,6 @@ export const userSchema = new Schema({
   },
   selected_teams: {
     type: selected_teams
-  },
-  matches_result: {
-    type: match_result
   }
 }, {
   collection: 'users',

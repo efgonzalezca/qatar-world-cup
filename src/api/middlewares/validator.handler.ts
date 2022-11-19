@@ -2,10 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 
 import { ErrorHandler } from '../../utils';
 import { requestProperty, validateSchema } from '../../types';
-import { loginDto } from '../../dtos';
+import { loginDto, modifyMatchFromUserBodyDto, modifyMatchFromUserParamsDto } from '../../dtos';
 
 const schemas = {
-  login: {schema: loginDto, code: 40006}
+  login: {schema: loginDto, code: 40006},
+  modifyMatchFromUserParams: {schema: modifyMatchFromUserParamsDto, code:40007},
+  modifyMatchFromUserBody: {schema: modifyMatchFromUserBodyDto, code:40008}
 }
 
 export const validatorHandler = (schema: validateSchema, property: requestProperty ) => {

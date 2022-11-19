@@ -1,4 +1,4 @@
-
+import { Types } from 'mongoose';
 export interface IUser {
   _id: string,
   password: string,
@@ -9,11 +9,13 @@ export interface IUser {
     champion: string,
     runner_up: string,
     third_place: string
-  },
-  matches_results: {
-    [key: string]: {
-      local_score: number,
-      visitor_score: number
-    }
-  },
+  }
+}
+
+export interface IMatchResult {
+  _id: Types.ObjectId,
+  user_id: string,
+  match_id: string,
+  local_score: number,
+  visitor_score: number
 }
