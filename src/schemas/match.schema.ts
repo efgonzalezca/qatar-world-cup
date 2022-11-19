@@ -14,7 +14,7 @@ export const matchSchema = new Schema({
     required: true,
   },
   has_played: {
-    type: String,
+    type: Boolean,
     required: true,
   },
 }, {
