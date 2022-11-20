@@ -24,16 +24,21 @@ export const modifyMatchFromUser = async (req: Request, res: Response, next: Nex
   const { local_score, visitor_score } = req.body
   try {
     let user = await UserService.findById(userId)?.lean();
-    if(!user) {
+    let match = await MatchService.findById(id)?.lean();
+    if(!user || !match) {
       throw new ErrorHandler(404, 40401, 'User or match not found')
     }
+    let today = new Date()
+    if(today.getTime() > (match.date).getTime()) {
+      throw new ErrorHandler(423, 42301, 'Match cannot be modified')
+    }
     const userMatchUpdated = await UserMatchesService.findByUserAndIdAndUpdate(userId, id, {local_score, visitor_score})?.lean();
-    console.log(userMatchUpdated)
-    logger.info(`Modify match ${id} from user ${user}`, getExtraParams(req));
+    logger.info(`Modify match ${id} from user ${userId}`, getExtraParams(req));
     return res
       .status(200)
       .json({
-        message: 'User match updated'
+        message: 'User match updated',
+        match_id: userMatchUpdated?.match_id
       })
   } catch(err) {
     return next(err);

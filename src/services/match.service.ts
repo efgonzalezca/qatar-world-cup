@@ -20,6 +20,14 @@ export class MatchService {
     }
     return;
   }
+  
+  static findById(id: string) {
+    this.createModel();
+    if(this.model) {
+      return this.model.findById(id);
+    }
+    return;
+  }
 
   private static createModel() {
     this.validateConnection();
