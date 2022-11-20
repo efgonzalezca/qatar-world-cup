@@ -1,10 +1,11 @@
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Response } from 'express';
 import { TokenExpiredError, verify } from 'jsonwebtoken';
 
 import config from '../../config';
+import { ICustomRequest, IPayload } from '../../types';
 import { ErrorHandler } from '../../utils';
 
-export const verifyJWT = (req: Request, _res: Response, next: NextFunction) => {
+export const verifyJWT = (req: ICustomRequest, _res: Response, next: NextFunction) => {
   const authorization = req.header('Authorization')?.split(' ');
   
   if(authorization?.length != 2 || authorization[0] != 'Bearer') {
@@ -12,7 +13,8 @@ export const verifyJWT = (req: Request, _res: Response, next: NextFunction) => {
   }
 
   try {
-    verify(authorization[1], config.secretKey);
+    let payload = <IPayload>verify(authorization[1], config.secretKey);
+    req.payload = payload;
     next();
   } catch (err) {
     if(err instanceof TokenExpiredError) {

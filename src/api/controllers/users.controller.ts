@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 
 import { UserService, UserMatchesService, MatchService } from '../../services';
 import { matchData } from '../../services/userMatches.service';
+import { ICustomRequest } from '../../types';
 import { getExtraParams, logger, ErrorHandler } from '../../utils';
 
 interface register {
@@ -11,21 +12,33 @@ interface register {
   password: string
 }
 
+interface updated {
+  password?: string,
+  champion?: string,
+  runner_up?: string,
+  third_place?: string,
+}
+
 export const modifyMatchFromUser = async (req: Request, res: Response, next: NextFunction) => {
   const { id, userId } = req.params
   const { local_score, visitor_score } = req.body
   try {
     let user = await UserService.findById(userId)?.lean();
-    if(!user) {
+    let match = await MatchService.findById(id)?.lean();
+    if(!user || !match) {
       throw new ErrorHandler(404, 40401, 'User or match not found')
     }
+    let today = new Date()
+    if(today.getTime() > (match.date).getTime()) {
+      throw new ErrorHandler(423, 42301, 'Match cannot be modified')
+    }
     const userMatchUpdated = await UserMatchesService.findByUserAndIdAndUpdate(userId, id, {local_score, visitor_score})?.lean();
-    console.log(userMatchUpdated)
-    logger.info(`Modify match ${id} from user ${user}`, getExtraParams(req));
+    logger.info(`Modify match ${id} from user ${userId}`, getExtraParams(req));
     return res
       .status(200)
       .json({
-        message: 'User match updated'
+        message: 'User match updated',
+        match_id: userMatchUpdated?.match_id
       })
   } catch(err) {
     return next(err);
@@ -93,6 +106,31 @@ export const register = async (req: Request, res: Response, next: NextFunction) 
       .json({
         message: 'User created',
         id: document
+      })
+  } catch(err) {
+    return next(err);
+  }
+}
+
+export const updateUser = async (req: ICustomRequest, res: Response, next: NextFunction) => {
+  try {
+    const { password, champion, runner_up, third_place } = <updated>req.body
+
+    if(password) {
+      await UserService.updateById(<string>req.payload?.document, password, 'password');
+    } else if(champion) {
+      await UserService.updateById(<string>req.payload?.document, champion, 'champion');
+    } else if(runner_up) {
+      await UserService.updateById(<string>req.payload?.document, runner_up, 'runner_up');
+    } else if(third_place) {
+      await UserService.updateById(<string>req.payload?.document, third_place, 'third_place');
+    } else {
+      throw new ErrorHandler(500, 50002, 'Invalid user updated');
+    }
+    return res
+      .status(200)
+      .json({
+        message: 'User updated'
       })
   } catch(err) {
     return next(err);

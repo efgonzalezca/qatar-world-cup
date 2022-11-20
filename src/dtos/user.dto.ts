@@ -45,3 +45,15 @@ export const registerDto = Joi.object({
   surnames: surnames,
   password: password
 })
+
+export const userUpdateBodyDto = Joi.object({
+  password: password,
+  champion: id,
+  runner_up: id,
+  third_place: id
+})
+
+export const userUpdateParamsDto = Joi.object({
+  id: document
+    .required()
+})

@@ -17,6 +17,8 @@ interface userData {
     third_place: string | null,
   }
 }
+
+type updatedType = 'password' | 'champion' | 'runner_up' | 'third_place'
 export class UserService {
   private static dbName: string = config.dbNameApp;
   private static db: (Connection | undefined) = connections.find((conn) => {
@@ -56,6 +58,30 @@ export class UserService {
     if(this.model) {
       let user = await this.model.findById(id).lean();
       return user ? true : false;
+    }
+    return;
+  }
+
+  static updateById(id: string, value: string, type: updatedType) {
+    this.createModel();
+    if(this.model) {
+      let update = {};
+      const types = {
+        password: () => {
+          let newPassword = generatePassword(value)
+          return {
+            password: newPassword
+          }
+        },
+        champion: () => ({'selected_teams.champion': value}),
+        runner_up: () => ({'selected_teams.runner_up': value}),
+        third_place: () => ({'selected_teams.third_place': value})
+      }
+      update = types[type]();
+      return this.model.findOneAndUpdate(
+        {_id: id},
+        update
+      );
     }
     return;
   }
