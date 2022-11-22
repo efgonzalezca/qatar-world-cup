@@ -19,6 +19,32 @@ interface updated {
   third_place?: string,
 }
 
+export const getMatchesUsersById = async(req:Request, res:Response, next:NextFunction )=>{
+  const {id} = req.params
+  try {
+    const userMatchesById = await UserMatchesService.getUsersMatchesByIdMatch(id)?.lean()
+    const users = await UserService.findAll()?.lean()
+  
+    const allData = userMatchesById?.map((match)=>{
+      let obj={}
+       let user = users?.find((user)=> user._id === match.user_id)
+      obj={...match,user:{
+        names : user?.names,
+        surnames : user?.surnames,
+      }}
+      return obj
+    })
+  
+    return res 
+      .status(200)
+      .json(allData)
+  } catch (error) {
+    return next(error)
+  }
+
+
+}
+
 export const modifyMatchFromUser = async (req: Request, res: Response, next: NextFunction) => {
   const { id, userId } = req.params
   const { local_score, visitor_score } = req.body

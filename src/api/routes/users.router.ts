@@ -1,6 +1,6 @@
 import { json, Router } from 'express';
 
-import { getUsersRanking, modifyMatchFromUser, register, updateUser } from '../controllers';
+import { getMatchesUsersById, getUsersRanking, modifyMatchFromUser, register, updateUser } from '../controllers';
 import { validatorHandler, verifyJWT } from '../middlewares';
 
 export const router: Router = Router();
@@ -18,6 +18,12 @@ router.get(
   '/',
   verifyJWT,
   getUsersRanking
+)
+
+router.get(
+  '/matches/:id',
+  verifyJWT,
+  getMatchesUsersById
 )
 
 router.post(

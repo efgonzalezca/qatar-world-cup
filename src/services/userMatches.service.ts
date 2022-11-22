@@ -35,6 +35,14 @@ export class UserMatchesService {
     return;
   }
 
+  static getUsersMatchesByIdMatch( match_id: string ) {
+    this.createModel();
+    if(this.model) {
+      return this.model.find({match_id: match_id} );
+    }
+    return;
+  }
+
   static create(matchData: matchData) {
     this.createModel();
     if(this.model) {
