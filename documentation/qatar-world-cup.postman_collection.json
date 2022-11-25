@@ -27,6 +27,41 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "update match",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"local_score\": 0,\r\n    \"visitor_score\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/matches/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"matches",
+								"1"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},

@@ -29,6 +29,22 @@ export class MatchService {
     return;
   }
 
+  static updateById(id: string, local_score: number, visitor_score: number) {
+    this.createModel();
+    if(this.model) {
+      console.log('updateById', id, local_score, visitor_score)
+      return this.model.findOneAndUpdate(
+        {_id: id},
+        {
+          'local_team.result': local_score,
+          'visiting_team.result': visitor_score,
+          has_played: true
+        }
+      );
+    }
+    return;
+  }
+
   private static createModel() {
     this.validateConnection();
     if(!this.model) {

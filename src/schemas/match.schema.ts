@@ -1,5 +1,7 @@
 import { Schema } from 'mongoose';
 
+//TODO: create schema to team --> local_team - visiting_team
+
 export const matchSchema = new Schema({
   _id: {
     type: String,
