@@ -19,6 +19,9 @@ export const userMatchesSchema = new Schema({
   },
   visitor_score: {
     type: Number,
+  },
+  points: {
+    type: Number
   }
 }, {
   collection: 'users_matches',
