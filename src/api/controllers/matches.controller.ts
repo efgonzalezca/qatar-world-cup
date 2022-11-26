@@ -19,7 +19,6 @@ export const updateMatch = async (req: Request, res: Response, next: NextFunctio
   const { id } = req.params;
   const { local_score, visitor_score } = req.body
   try {
-    console.log(local_score, visitor_score)
     let updatedMatch = await MatchService.updateById(id, local_score, visitor_score)?.lean();
     //TODO: update all user score
     logger.info(`Update match ${id}`, getExtraParams(req));

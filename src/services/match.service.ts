@@ -32,7 +32,6 @@ export class MatchService {
   static updateById(id: string, local_score: number, visitor_score: number) {
     this.createModel();
     if(this.model) {
-      console.log('updateById', id, local_score, visitor_score)
       return this.model.findOneAndUpdate(
         {_id: id},
         {
