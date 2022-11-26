@@ -17,5 +17,6 @@ export interface IMatchResult {
   user_id: string,
   match_id: string,
   local_score: number,
-  visitor_score: number
+  visitor_score: number,
+  points: number
 }

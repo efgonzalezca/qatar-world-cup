@@ -19,6 +19,16 @@ export class UserMatchesService {
   
   constructor() {}
 
+  static findByUserAndMatch(user_id: string, match_id: string, projection={}) {
+    this.createModel();
+    if(this.model) {
+      return this.model.findOne(
+        {user_id: user_id, match_id: match_id},
+        projection);
+    }
+    return;
+  }
+
   static findAllByUser(user_id: string, projection={}) {
     this.createModel();
     if(this.model) {
@@ -52,7 +62,6 @@ export class UserMatchesService {
   }
 
   static async createAll(matches: matchData[]) {
-    
     for (let match of matches) {
       if(!(await this.exists(match.user_id ,match.match_id))) {
         await this.create(match)
@@ -65,6 +74,17 @@ export class UserMatchesService {
     if(this.model) {
       let user = await this.model.findOne({user_id: user_id, match_id: match_id}).lean();
       return user ? true : false;
+    }
+    return;
+  }
+
+  static updateMatchPoints(user_id: string, match_id: string, points: number) {
+    this.createModel()
+    if(this.model) {
+      return this.model.findOneAndUpdate(
+        {user_id: user_id, match_id: match_id},
+        {points: points}
+      ).lean();
     }
     return;
   }

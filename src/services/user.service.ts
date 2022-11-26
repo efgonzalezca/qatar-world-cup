@@ -86,6 +86,23 @@ export class UserService {
     return;
   }
 
+  static updateUserScore(user: {_id: string, score: number, points: number}) {
+    this.createModel()
+    if(this.model) {
+      return this.model.findOneAndUpdate(
+        {_id: user._id},
+        {score: user.score + user.points}
+      ).lean();
+    }
+    return;
+  }
+
+  static async updateUsersScore(users: {_id: string, score: number, points: number}[]) {
+    for (let user of users) {
+      await this.updateUserScore(user);
+    }
+  }
+
   private static createModel() {
     this.validateConnection();
     if(!this.model) {

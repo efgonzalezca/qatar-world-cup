@@ -38,7 +38,8 @@ export class MatchService {
           'local_team.result': local_score,
           'visiting_team.result': visitor_score,
           has_played: true
-        }
+        },
+        {new: true}
       );
     }
     return;
